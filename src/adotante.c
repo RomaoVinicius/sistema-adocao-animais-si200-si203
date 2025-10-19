@@ -54,3 +54,41 @@ int cadastrar_adotante() {
     fclose(banco_de_adotantes);
     return 1;
 }
+
+
+int deletar_adotante(char *cpf_de_exclusao){
+        // criacao de 1 arquivo copia para apagar o animal
+        FILE *banco_de_adotantes = fopen("../data/adotantes.txt", "r");
+        FILE *banco_de_adotantes_temp = fopen("../data/adotantes_temp.txt", "w");
+        char cpf_da_linha[200];
+        int encontrado = 0;
+
+        if (banco_de_adotantes == NULL || banco_de_adotantes_temp == NULL) {
+        return 0;
+        }
+
+        while (fgets(cpf_da_linha, sizeof(cpf_da_linha), banco_de_adotantes)) {
+        char primeira_palavra[100];
+        int i = 0;
+
+        while (cpf_da_linha[i] != ';' && cpf_da_linha[i] != '\0' && cpf_da_linha[i] != '\n') {
+        primeira_palavra[i] = cpf_da_linha[i];
+        i++;
+        }
+        primeira_palavra[i] = '\0';
+
+        if (strcmp(primeira_palavra, cpf_de_exclusao) == 0) {
+        encontrado = 1;
+        } else {
+        fputs(cpf_da_linha, banco_de_adotantes_temp);
+    }
+}
+
+    fclose(banco_de_adotantes);
+    fclose(banco_de_adotantes_temp);
+
+    remove("../data/adotantes.txt");
+    rename("../data/adotantes_temp.txt", "../data/adotantes.txt");
+
+    return encontrado;
+}

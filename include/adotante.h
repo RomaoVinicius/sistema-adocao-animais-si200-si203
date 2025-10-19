@@ -11,4 +11,5 @@ typedef struct{
 }adotante;
 
 int cadastrar_adotante();
+int deletar_adotante(char *cpf_de_exclusao);
 #endif

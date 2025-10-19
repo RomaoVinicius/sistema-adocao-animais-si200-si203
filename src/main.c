@@ -7,7 +7,7 @@
 
 int main(){
     int escolha_menu,verificacao_de_erro;
-    char identificador_de_exclusao[100];
+    char identificador_de_exclusao[100],cpf_de_exclusao[100];
     char *ponteiro_de_exclusao;
     while (true){
         printf("\n===== MENU DO SISTEMA =====\n");
@@ -59,6 +59,17 @@ int main(){
             }
             break;
             case 4:
+            printf("\nEntre com Cpf do Adotante a ser excluido do sistema\n");
+            fgets(cpf_de_exclusao, sizeof(cpf_de_exclusao), stdin);
+            cpf_de_exclusao[strcspn(cpf_de_exclusao, "\n")] = '\0';
+            ponteiro_de_exclusao = cpf_de_exclusao;
+            verificacao_de_erro = deletar_adotante(ponteiro_de_exclusao);
+            if(verificacao_de_erro == 1){
+                printf("\nAdotante foi Exluido do Sistema;!");
+            }else{
+                printf("\nNao foi possivel excluir o Adotante");
+            }
+            break;
             break;
             case 5:
             break;
