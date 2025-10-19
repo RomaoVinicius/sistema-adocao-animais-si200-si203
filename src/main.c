@@ -3,9 +3,12 @@
 #include "../include/adotante.h"
 #include "../include/utils.h"
 #include <stdio.h>
+#include <string.h>
 
 int main(){
     int escolha_menu,verificacao_de_erro;
+    char identificador_de_exclusao[100];
+    char *ponteiro_de_exclusao;
     while (true){
         printf("\n===== MENU DO SISTEMA =====\n");
         printf("1 - Cadastrar animal\n");
@@ -44,6 +47,16 @@ int main(){
             break;
             
             case 3:
+            printf("\nEntre com Identificador do animal a ser excluido do sistema\n");
+            fgets(identificador_de_exclusao, sizeof(identificador_de_exclusao), stdin);
+            identificador_de_exclusao[strcspn(identificador_de_exclusao, "\n")] = '\0';
+            ponteiro_de_exclusao = identificador_de_exclusao;
+            verificacao_de_erro = deletar_animal(ponteiro_de_exclusao);
+            if(verificacao_de_erro == 1){
+                printf("\nAnimal Exluido do Sistema;!");
+            }else{
+                printf("\nNao foi possivel excluir o animal");
+            }
             break;
             case 4:
             break;

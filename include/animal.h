@@ -11,4 +11,5 @@ typedef struct{
 }animal;
 
 int cadastrar_animal();
+int deletar_animal(char *identificador_de_exclusao);
 #endif

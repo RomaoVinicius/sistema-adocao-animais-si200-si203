@@ -62,8 +62,41 @@ int cadastrar_animal(){
     return 1;
 }
 
-int deletar_animal(){
-    
+int deletar_animal(char *identificador_de_exclusao) {
+    // criacao de 1 arquivo copia para apagar o animal
+    FILE *banco_de_animais = fopen("../data/animal.txt", "r");
+    FILE *banco_de_animais_temp = fopen("../data/temp.txt", "w");
+    char identificador_da_linha[200];
+    int encontrado = 0;
 
-    return 1;
+    if (banco_de_animais == NULL || banco_de_animais_temp == NULL) {
+        return 0;
+    }
+
+    while (fgets(identificador_da_linha, sizeof(identificador_da_linha), banco_de_animais)) {
+        char primeira_palavra[100];
+        int i = 0;
+
+        while (identificador_da_linha[i] != ';' && identificador_da_linha[i] != '\0' && identificador_da_linha[i] != '\n') {
+            primeira_palavra[i] = identificador_da_linha[i];
+            i++;
+        }
+        primeira_palavra[i] = '\0';
+
+        if (strcmp(primeira_palavra, identificador_de_exclusao) == 0) {
+            fprintf(banco_de_animais_temp, ";\n");
+            encontrado = 1;
+        } else {
+            fputs(identificador_da_linha, banco_de_animais_temp);
+        }
+    }
+
+    fclose(banco_de_animais);
+    fclose(banco_de_animais_temp);
+
+    remove("../data/animal.txt");
+    rename("../data/temp.txt", "../data/animal.txt");
+
+    return encontrado;
 }
+
