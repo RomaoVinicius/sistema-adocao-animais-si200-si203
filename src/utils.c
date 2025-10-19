@@ -1,5 +1,6 @@
-#include<stdio.h>
-#include "utils.h"
+#include "../include/utils.h"
+#include <stdio.h>
+#include <string.h>
 #include <stdbool.h>
 
 int verificacao_de_arquivo(FILE *banco_de_animais){

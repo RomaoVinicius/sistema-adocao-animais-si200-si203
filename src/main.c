@@ -1,8 +1,9 @@
-#include <stdio.h>
 #include <stdbool.h>
-#include "utils.h"
-#include "adotante.h"
-#include "animal.h"
+#include "../include/animal.h"
+#include "../include/adotante.h"
+#include "../include/utils.h"
+#include <stdio.h>
+
 int main(){
     int escolha_menu,verificacao_de_erro;
     while (true){

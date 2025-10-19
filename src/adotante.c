@@ -1,12 +1,12 @@
-#include "adotante.h"
+#include "../include/adotante.h"
+#include "../include/utils.h"
 #include <stdio.h>
 #include <stdbool.h>
 #include <string.h>
-#include "utils.h"
 
 int cadastrar_adotante() {
     bool resultado_verificacao;
-    FILE *banco_de_adotantes = fopen("adotantes.txt", "a+");
+    FILE *banco_de_adotantes = fopen("../data/adotantes.txt", "a+");
     resultado_verificacao = verificacao_de_arquivo(banco_de_adotantes);
     if (resultado_verificacao == 0) {
         return 0;
@@ -44,8 +44,8 @@ int cadastrar_adotante() {
     limpar_buffer();
 
     fprintf(banco_de_adotantes, "%s;%s;%s;%s;%i;%i\n",
-            cadastro_adotante.nome,
             cadastro_adotante.cpf,
+            cadastro_adotante.nome,
             cadastro_adotante.cep,
             cadastro_adotante.celular,
             cadastro_adotante.preferencia_de_raca,

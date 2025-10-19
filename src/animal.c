@@ -1,11 +1,11 @@
-#include "animal.h"
+#include "../include/animal.h"
+#include "../include/utils.h"
 #include <stdio.h>
-#include "utils.h"
 #include <stdbool.h>
-#include <string.h> 
+#include <string.h>
 int cadastrar_animal(){
     bool resultado_verificacao;
-    FILE *banco_de_animais = fopen("animal.txt","a+");
+    FILE *banco_de_animais = fopen("../data/animal.txt","a+");
     resultado_verificacao= verificacao_de_arquivo(banco_de_animais);
     if (resultado_verificacao == 0){
         return 0;
@@ -59,5 +59,11 @@ int cadastrar_animal(){
             cadastro_animal.apto_para_adocao);
 
     fclose(banco_de_animais);
+    return 1;
+}
+
+int deletar_animal(){
+    
+
     return 1;
 }
