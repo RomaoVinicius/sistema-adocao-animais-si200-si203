@@ -5,7 +5,7 @@
 typedef struct{
     int identificador;
     char nome[50];
-    char raca[50];
+    int  raca;
     int faixa_etaria;       // 1-Recem nascido, 2-Adulto, 3-Velho
     int apto_para_adocao;
 }animal;
