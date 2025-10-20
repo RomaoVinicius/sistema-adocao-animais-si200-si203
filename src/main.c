@@ -110,7 +110,20 @@ int main(){
                 printf("\nNao foi possivel Fazer a consulta");
             }
             break;
+
             case 8:
+            printf("\nDeseja fazer um 1 - consulta geral ou 2 -especifica ?\n");
+            scanf("%i",&tipo_consulta);
+            limpar_buffer();
+            if(tipo_consulta==1){
+               verificacao_de_erro = consulta_geral_adotante(); 
+            }else{
+                verificacao_de_erro = consulta_especifica_adotante();
+            }
+            if(verificacao_de_erro != 1){
+                printf("\nNao foi possivel Fazer a consulta");
+            }
+            break;
             case 9:
             break;
             case 10:

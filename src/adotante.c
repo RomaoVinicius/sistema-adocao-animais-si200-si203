@@ -162,3 +162,96 @@ int atualizaco_de_adotante(char *ponteiro_de_atualizacao){
 
     return verificacao_de_erro;
 }
+
+int consulta_geral_adotante() {
+    bool resultado_verificacao;
+    FILE *banco_de_adotantes = fopen("../data/adotantes.txt", "r");
+    resultado_verificacao = verificacao_de_arquivo(banco_de_adotantes);
+    if (resultado_verificacao == 0) {
+        return 0;
+    }
+
+    char linha[300];
+
+    printf("\n====================== LISTA DE ADOTANTES =========================================================\n");
+    printf("%-15s | %-25s | %-10s | %-12s | %-10s | %-10s\n",
+           "CPF", "Nome", "CEP", "Celular", "Raca", "Faixa Etaria");
+    printf("----------------------------------------------------------------\n");
+
+    while (fgets(linha, sizeof(linha), banco_de_adotantes)) {
+        // Remove quebras de linha (\n e \r)
+        linha[strcspn(linha, "\r\n")] = '\0';
+
+        char *partes[10];
+        int i = 0;
+        char *token = strtok(linha, ";");
+
+        while (token != NULL && i < 10) {
+            partes[i++] = token;
+            token = strtok(NULL, ";");
+        }
+
+        // So mostra se tiver pelo menos 6 campos
+        if (i >= 6) {
+            printf("%-15s | %-25s | %-10s | %-12s | %-10s | %-10s\n",
+                   partes[0], partes[1], partes[2], partes[3], partes[4], partes[5]);
+        } else {
+            printf("[ERRO] Linha com formato incorreto: %s\n", linha);
+        }
+    }
+
+    printf("==================================================================================================\n");
+
+    fclose(banco_de_adotantes);
+    return 1;
+}
+
+
+int consulta_especifica_adotante() {
+    bool resultado_verificacao;
+    FILE *banco_de_adotantes = fopen("../data/adotantes.txt", "r");
+    resultado_verificacao = verificacao_de_arquivo(banco_de_adotantes);
+    if (resultado_verificacao == 0) {
+        return 0;
+    }
+
+    char cpf[20];
+    printf("\nDigite o CPF do adotante que deseja consultar: ");
+    scanf("%19s", cpf);
+
+    char linha[300];
+    int encontrado = 0;
+
+    while (fgets(linha, sizeof(linha), banco_de_adotantes)) {
+        linha[strcspn(linha, "\r\n")] = '\0';
+
+        char *partes[10];
+        int i = 0;
+        char *token = strtok(linha, ";");
+
+        while (token != NULL && i < 10) {
+            partes[i++] = token;
+            token = strtok(NULL, ";");
+        }
+
+        if (strcmp(partes[0], cpf) == 0) {
+            encontrado = 1;
+
+            printf("\n================== DADOS DO ADOTANTE =============================================================\n");
+            printf("%-15s | %-25s | %-10s | %-12s | %-10s | %-10s\n",
+                   "CPF", "Nome", "CEP", "Celular", "Raca", "Faixa Etaria");
+            printf("-------------------------------------------------------\n");
+            printf("%-15s | %-25s | %-10s | %-12s | %-10s | %-10s\n",
+                   partes[0], partes[1], partes[2], partes[3], partes[4], partes[5]);
+            printf("===============================================================================================\n");
+            break;
+        }
+    }
+
+    if (!encontrado) {
+        printf("\nNenhum adotante encontrado com o CPF informado.\n");
+    }
+
+    fclose(banco_de_adotantes);
+    return 1;
+}
