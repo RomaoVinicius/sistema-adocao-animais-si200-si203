@@ -244,7 +244,7 @@ int consulta_adocoes() {
         if (token == NULL) continue;
         id_animal = atoi(token);
 
-        // 🔹 Buscar nome do adotante
+        //  Buscar nome do adotante
         rewind(banco_adotantes);
         char linha_adotante[256];
         char nome_adotante[100] = "Desconhecido";
@@ -259,7 +259,7 @@ int consulta_adocoes() {
             }
         }
 
-        // 🔹 Buscar nome e tipo do animal
+        // Buscar nome e tipo do animal
         rewind(banco_animais);
         char linha_animal[256];
         char nome_animal[100] = "Desconhecido";
