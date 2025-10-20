@@ -7,7 +7,7 @@
 
 int main(){
     int escolha_menu,verificacao_de_erro;
-    char identificador_de_exclusao[100],cpf_de_exclusao[100],identificador_de_atualizacao[100];
+    char identificador_de_exclusao[100],cpf_de_exclusao[100],identificador_de_atualizacao[100],cpf_de_atualizacao[100];
     char *ponteiro_de_exclusao;
     char *ponteiro_de_atualizacao;
     while (true){
@@ -85,6 +85,17 @@ int main(){
             }
             break;
             case 6:
+            printf("\nEntre com Cpf do Adotante a ser atualizacao no sistema\n");
+            fgets(cpf_de_atualizacao, sizeof(cpf_de_atualizacao), stdin);
+            cpf_de_atualizacao[strcspn(cpf_de_atualizacao, "\n")] = '\0';
+            ponteiro_de_atualizacao = cpf_de_atualizacao;
+
+            verificacao_de_erro = atualizaco_de_adotante(ponteiro_de_atualizacao);
+            if(verificacao_de_erro == 1){
+                printf("\nAdotante atualizado!");
+            }else{
+                printf("\nNao foi possivel Atualizar o Adotante");
+            }
             break;
             case 7:
             break;

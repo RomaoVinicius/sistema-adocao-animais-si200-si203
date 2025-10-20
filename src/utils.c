@@ -2,6 +2,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdbool.h>
+#include <ctype.h>
+
 
 int verificacao_de_arquivo(FILE *banco_de_animais){
     if(banco_de_animais==NULL){
@@ -20,68 +22,77 @@ int atualizacao_geral(char *ponteiro_de_atualizacao, int atributo_atualizado, ch
     FILE *banco_temp;
     FILE *banco;
 
-    if (atributo_atualizado >= 1 && atributo_atualizado <= 4) {
-        banco_temp = fopen("../data/animal_temp.txt", "w");
+    // Decide qual arquivo abrir baseado no atributo
+    int eh_animal = (atributo_atualizado >= 1 && atributo_atualizado <= 4);
+    if (eh_animal) {
         banco = fopen("../data/animal.txt", "r");
+        banco_temp = fopen("../data/animal_temp.txt", "w");
     } else {
-        banco_temp = fopen("../data/adotantes_temp.txt", "w");
         banco = fopen("../data/adotantes.txt", "r");
+        banco_temp = fopen("../data/adotantes_temp.txt", "w");
     }
 
-    if (banco == NULL || banco_temp == NULL) {
+    if (!banco || !banco_temp) {
         printf("Erro ao abrir arquivos.\n");
         return 0;
     }
 
-    char identificador_da_linha[300];
+    char linha[300];
     int encontrado = 0;
 
-    while (fgets(identificador_da_linha, sizeof(identificador_da_linha), banco)) {
-        identificador_da_linha[strcspn(identificador_da_linha, "\n")] = '\0';
+    while (fgets(linha, sizeof(linha), banco)) {
+        linha[strcspn(linha, "\r\n")] = '\0'; // remove quebra de linha
         char primeira_palavra[100];
         int i = 0;
 
-        
-        while (identificador_da_linha[i] != ';' && identificador_da_linha[i] != '\0' && identificador_da_linha[i] != '\n') {
-            primeira_palavra[i] = identificador_da_linha[i];
+        // Lê até o primeiro ';'
+        while (linha[i] != ';' && linha[i] != '\0') {
+            primeira_palavra[i] = linha[i];
             i++;
         }
         primeira_palavra[i] = '\0';
 
+        // Remove espaços extras (importante!)
+        while (isspace((unsigned char)primeira_palavra[strlen(primeira_palavra) - 1])) {
+            primeira_palavra[strlen(primeira_palavra) - 1] = '\0';
+        }
+
         if (strcmp(primeira_palavra, ponteiro_de_atualizacao) == 0) {
             encontrado = 1;
+
             char *partes[10];
             int j = 0;
-            char *token = strtok(identificador_da_linha, ";");
-
-            while (token != NULL && j < 10) {
+            char *token = strtok(linha, ";");
+            while (token && j < 10) {
                 partes[j++] = token;
-                //Continue de onde parou e me dá o próximo pedaço até o próximo ;
                 token = strtok(NULL, ";");
             }
 
-            // Atualiza o atributo escolhido
-            if (atributo_atualizado >= 1 && atributo_atualizado <= j) {
-                partes[atributo_atualizado] = valor_atualizado;
+            int indice_real;
+            if (eh_animal)
+                indice_real = atributo_atualizado;
+            else
+                indice_real = atributo_atualizado - 4;
+
+            if (indice_real >= 1 && indice_real <= j) {
+                partes[indice_real - 1] = valor_atualizado;
             }
 
-            // Regrava a linha atualizada
-                for (int k = 0; k < j; k++) {
+            for (int k = 0; k < j; k++) {
                 fprintf(banco_temp, "%s", partes[k]);
-                if (k < j - 1) fprintf(banco_temp, ";");  // adiciona ; só entre os campos
-                }
-            fprintf(banco_temp, "\n");  
+                if (k < j - 1) fprintf(banco_temp, ";");
+            }
+            fprintf(banco_temp, "\n");
 
         } else {
-            // Mantém a linha original
-            fprintf(banco_temp, "%s\n", identificador_da_linha);
+            fprintf(banco_temp, "%s\n", linha);
         }
     }
 
     fclose(banco);
     fclose(banco_temp);
 
-    if (atributo_atualizado >= 1 && atributo_atualizado <= 4) {
+    if (eh_animal) {
         remove("../data/animal.txt");
         rename("../data/animal_temp.txt", "../data/animal.txt");
     } else {
