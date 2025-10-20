@@ -62,6 +62,7 @@ int cadastrar_animal(){
     return 1;
 }
 
+
 int deletar_animal(char *identificador_de_exclusao) {
     // criacao de 1 arquivo copia para apagar o animal
     FILE *banco_de_animais = fopen("../data/animal.txt", "r");
@@ -100,3 +101,63 @@ int deletar_animal(char *identificador_de_exclusao) {
     return encontrado;
 }
 
+
+int atualizaco_de_animal(char *ponteiro_de_atualizacao){
+    int atualizacao_de_atributo,verificacao_de_erro;
+    char valor_atualizado[100];
+   printf("\n===== ATUALIZAR DADOS DO ANIMAL =====\n");
+    printf("Escolha o campo que deseja atualizar:\n");
+    printf("1 - Nome\n");
+    printf("2 - Raca\n");
+    printf("3 - Faixa etaria\n");
+    printf("4 - Apto para adocao (1 = Sim, 0 = Nao)\n");
+    printf("======================================\n");
+    printf("Digite a opcao desejada: ");
+    scanf("%d", &atualizacao_de_atributo);
+    limpar_buffer();
+
+
+    switch (atualizacao_de_atributo){
+    case 1:
+        printf("\nEntre com o novo nome do animal: \n");
+        fgets(valor_atualizado, sizeof(valor_atualizado), stdin);
+        valor_atualizado[strcspn(valor_atualizado, "\n")] = '\0';
+        verificacao_de_erro = atualizacao_geral(ponteiro_de_atualizacao,atualizacao_de_atributo,valor_atualizado);
+        return verificacao_de_erro;
+        break;
+    case 2:
+        printf("\nEntre com a nova Raca do animal: \n");
+        printf("1 - Cachorro\n");
+        printf("2 - Gato\n");
+        printf("3 - Coelho\n");
+        fgets(valor_atualizado, sizeof(valor_atualizado), stdin);
+        valor_atualizado[strcspn(valor_atualizado, "\n")] = '\0';
+        verificacao_de_erro = atualizacao_geral(ponteiro_de_atualizacao,atualizacao_de_atributo,valor_atualizado);
+        return verificacao_de_erro;
+        break;
+    case 3:
+        printf("\nEntre com a novo Faixa etaria do animal: \n");
+        printf("1 - Recem nascido (menor de 1 ano)\n");
+        printf("2 - Adulto (1-10 anos)\n");
+        printf("3 - Velho (acima de 10 anos)\n");
+        fgets(valor_atualizado, sizeof(valor_atualizado), stdin);
+        valor_atualizado[strcspn(valor_atualizado, "\n")] = '\0';
+        verificacao_de_erro = atualizacao_geral(ponteiro_de_atualizacao,atualizacao_de_atributo,valor_atualizado);
+        return verificacao_de_erro;
+        break;
+    case 4:
+        printf("\nEntre com a nova Disponibilidade para adocao do animal: \n");
+        printf("\nO animal esta apto para adocao? 1-Sim 0-Nao\n");
+        fgets(valor_atualizado, sizeof(valor_atualizado), stdin);
+        valor_atualizado[strcspn(valor_atualizado, "\n")] = '\0';
+        verificacao_de_erro = atualizacao_geral(ponteiro_de_atualizacao,atualizacao_de_atributo,valor_atualizado);
+        return verificacao_de_erro;
+        break;
+    default:
+    printf("\nOpcao Invalida!");
+        return 0;
+        break;
+    }
+
+    return 1;
+}

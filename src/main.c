@@ -7,8 +7,9 @@
 
 int main(){
     int escolha_menu,verificacao_de_erro;
-    char identificador_de_exclusao[100],cpf_de_exclusao[100];
+    char identificador_de_exclusao[100],cpf_de_exclusao[100],identificador_de_atualizacao[100];
     char *ponteiro_de_exclusao;
+    char *ponteiro_de_atualizacao;
     while (true){
         printf("\n===== MENU DO SISTEMA =====\n");
         printf("1 - Cadastrar animal\n");
@@ -70,8 +71,18 @@ int main(){
                 printf("\nNao foi possivel excluir o Adotante");
             }
             break;
-            break;
             case 5:
+            printf("\nEntre com id do Animal a ser atualizacao no sistema\n");
+            fgets(identificador_de_atualizacao, sizeof(identificador_de_atualizacao), stdin);
+            identificador_de_atualizacao[strcspn(identificador_de_atualizacao, "\n")] = '\0';
+            ponteiro_de_atualizacao = identificador_de_atualizacao;
+
+            verificacao_de_erro = atualizaco_de_animal(ponteiro_de_atualizacao);
+            if(verificacao_de_erro == 1){
+                printf("\nAnimal atualizado!");
+            }else{
+                printf("\nNao foi possivel Atualizar o Animal");
+            }
             break;
             case 6:
             break;
