@@ -7,9 +7,10 @@
 
 int main(){
     int escolha_menu,verificacao_de_erro,tipo_consulta;
-    char identificador_de_exclusao[100],cpf_de_exclusao[100],identificador_de_atualizacao[100],cpf_de_atualizacao[100];
+    char identificador_de_exclusao[100],cpf_de_exclusao[100],identificador_de_atualizacao[100],cpf_de_atualizacao[100],cpf_de_adocao[50];
     char *ponteiro_de_exclusao;
     char *ponteiro_de_atualizacao;
+    char *ponteiro_de_adocao;
     while (true){
         printf("\n===== MENU DO SISTEMA =====\n");
         printf("1 - Cadastrar animal\n");
@@ -125,6 +126,17 @@ int main(){
             }
             break;
             case 9:
+            printf("\nEntre com Cpf do Adotante que ira adotar um animal\n");
+            fgets(cpf_de_adocao, sizeof(cpf_de_adocao), stdin);
+            cpf_de_adocao[strcspn(cpf_de_adocao, "\n")] = '\0';
+            ponteiro_de_adocao = cpf_de_adocao;
+
+            verificacao_de_erro = adocao_de_animal(ponteiro_de_adocao);
+            if(verificacao_de_erro == 1){
+                printf("\nAdocao Realizada!");
+            }else{
+                printf("\nNao foi possivel Realizar a Adocao");
+            }
             break;
             case 10:
             break;

@@ -3,7 +3,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include <ctype.h>
-
+#include <stdlib.h>
 
 int verificacao_de_arquivo(FILE *banco_de_animais){
     if(banco_de_animais==NULL){
@@ -101,4 +101,120 @@ int atualizacao_geral(char *ponteiro_de_atualizacao, int atributo_atualizado, ch
     }
 
     return encontrado;
+}
+
+int adocao_de_animal(char *cpf) {
+    FILE *banco_de_animais = fopen("../data/animal.txt", "r");
+    FILE *banco_de_adotantes = fopen("../data/adotantes.txt", "r");
+    FILE *banco_de_adocoes = fopen("../data/adocoes.txt", "a+");
+
+    if (!banco_de_animais || !banco_de_adotantes || !banco_de_adocoes) {
+        printf("Erro ao abrir um dos arquivos necessarios.\n");
+        return 0;
+    }
+
+    
+    char linha[300];
+    int adotante_encontrado = 0;
+
+    while (fgets(linha, sizeof(linha), banco_de_adotantes)) {
+        linha[strcspn(linha, "\r\n")] = '\0'; 
+        char *token = strtok(linha, ";");
+        if (token != NULL && strcmp(token, cpf) == 0) {
+            adotante_encontrado = 1;
+            break;
+        }
+    }
+
+    if (!adotante_encontrado) {
+        printf("\nAdotante nao encontrado. Cadastre-o antes de realizar a adocao.\n");
+        fclose(banco_de_animais);
+        fclose(banco_de_adotantes);
+        fclose(banco_de_adocoes);
+        return 0;
+    }
+
+
+    rewind(banco_de_animais);
+    printf("\n=========== ANIMAIS DISPONIVEIS PARA ADOCAO ===========\n");
+    printf("ID | Nome                | Tipo | Idade | Apto\n");
+    printf("-------------------------------------------------------\n");
+
+    int animais_disponiveis = 0;
+    while (fgets(linha, sizeof(linha), banco_de_animais)) {
+        linha[strcspn(linha, "\r\n")] = '\0';
+        char *token = strtok(linha, ";");
+        char campos[6][50];
+        int i = 0;
+
+        while (token != NULL && i < 6) {
+            strcpy(campos[i++], token);
+            token = strtok(NULL, ";");
+        }
+
+        if (atoi(campos[4]) == 1) { // apto para adocao
+            printf("%-3s | %-18s | %-4s | %-5s | %-3s\n",
+                   campos[0], campos[1], campos[2], campos[3], campos[4]);
+            animais_disponiveis++;
+        }
+    }
+
+    if (animais_disponiveis == 0) {
+        printf("\nNao ha animais disponiveis para adocao no momento.\n");
+        fclose(banco_de_animais);
+        fclose(banco_de_adotantes);
+        fclose(banco_de_adocoes);
+        return 0;
+    }
+
+    
+    int id_escolhido;
+    printf("\nDigite o ID do animal que deseja adotar: ");
+    scanf("%d", &id_escolhido);
+
+    
+    fprintf(banco_de_adocoes, "%s;%d;\n", cpf, id_escolhido);
+    printf("\nAdocao registrada com sucesso!\n");
+
+    
+    rewind(banco_de_animais);
+    FILE *temp = fopen("../data/temp.txt", "w");
+
+    if (!temp) {
+        printf("Erro ao criar arquivo temporario.\n");
+        fclose(banco_de_animais);
+        fclose(banco_de_adotantes);
+        fclose(banco_de_adocoes);
+        return 0;
+    }
+
+    while (fgets(linha, sizeof(linha), banco_de_animais)) {
+        linha[strcspn(linha, "\r\n")] = '\0';
+        char *token = strtok(linha, ";");
+        char campos[6][50];
+        int i = 0;
+
+        while (token != NULL && i < 6) {
+            strcpy(campos[i++], token);
+            token = strtok(NULL, ";");
+        }
+
+        // marca como nao apto
+        if (atoi(campos[0]) == id_escolhido) {
+            strcpy(campos[4], "0");
+        }
+
+        fprintf(temp, "%s;%s;%s;%s;%s\n",
+                campos[0], campos[1], campos[2], campos[3], campos[4]);
+    }
+
+    fclose(banco_de_animais);
+    fclose(temp);
+    remove("../data/animal.txt");
+    rename("../data/temp.txt", "../data/animal.txt");
+
+    fclose(banco_de_adotantes);
+    fclose(banco_de_adocoes);
+
+    return 1;
 }

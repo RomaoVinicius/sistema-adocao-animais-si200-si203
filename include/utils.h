@@ -5,4 +5,5 @@
 int verificacao_de_arquivo(FILE *banco_de_animais);
 void limpar_buffer();
 int atualizacao_geral(char *ponteiro_de_atualizacao, int atributo_atualizado, char *valor_atualizado);
+int adocao_de_animal(char *cpf);
 #endif
