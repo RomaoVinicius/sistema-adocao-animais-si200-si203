@@ -218,3 +218,71 @@ int adocao_de_animal(char *cpf) {
 
     return 1;
 }
+
+int consulta_adocoes() {
+    FILE *banco_adocoes = fopen("../data/adocoes.txt", "r");
+    FILE *banco_animais = fopen("../data/animal.txt", "r");
+    FILE *banco_adotantes = fopen("../data/adotantes.txt", "r");
+
+    if (!banco_adocoes || !banco_animais || !banco_adotantes) {
+        printf("Erro ao abrir os arquivos necessários.\n");
+        return 0;
+    }
+
+    char linha[256];
+    char cpf[20];
+    int id_animal;
+
+    printf("\n=== CONSULTA DE ADOCOES REALIZADAS ===\n");
+
+    while (fgets(linha, sizeof(linha), banco_adocoes)) {
+        char *token = strtok(linha, ";");
+        if (token == NULL) continue;
+        strcpy(cpf, token);
+
+        token = strtok(NULL, ";");
+        if (token == NULL) continue;
+        id_animal = atoi(token);
+
+        // 🔹 Buscar nome do adotante
+        rewind(banco_adotantes);
+        char linha_adotante[256];
+        char nome_adotante[100] = "Desconhecido";
+
+        while (fgets(linha_adotante, sizeof(linha_adotante), banco_adotantes)) {
+            char *cpf_lido = strtok(linha_adotante, ";");
+            if (cpf_lido && strcmp(cpf_lido, cpf) == 0) {
+                char *nome = strtok(NULL, ";");
+                if (nome)
+                    strcpy(nome_adotante, nome);
+                break;
+            }
+        }
+
+        // 🔹 Buscar nome e tipo do animal
+        rewind(banco_animais);
+        char linha_animal[256];
+        char nome_animal[100] = "Desconhecido";
+        char tipo_animal[50] = "Desconhecido";
+
+        while (fgets(linha_animal, sizeof(linha_animal), banco_animais)) {
+            char *token_animal = strtok(linha_animal, ";");
+            if (token_animal && atoi(token_animal) == id_animal) {
+                char *nome = strtok(NULL, ";");
+                char *tipo = strtok(NULL, ";");
+                if (nome) strcpy(nome_animal, nome);
+                if (tipo) strcpy(tipo_animal, tipo);
+                break;
+            }
+        }
+
+        printf("\nAdotante: %s (CPF: %s)\n", nome_adotante, cpf);
+        printf("Animal: %s (ID: %d) - Tipo: %s\n", nome_animal, id_animal, tipo_animal);
+        printf("------------------------------------------\n");
+    }
+
+    fclose(banco_adocoes);
+    fclose(banco_animais);
+    fclose(banco_adotantes);
+    return 1;
+}
