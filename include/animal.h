@@ -13,4 +13,6 @@ typedef struct{
 int cadastrar_animal();
 int deletar_animal(char *identificador_de_exclusao);
 int atualizaco_de_animal(char *ponteiro_de_atualizacao);
+int consulta_geral_animal();
+int consulta_especifica_animal();
 #endif

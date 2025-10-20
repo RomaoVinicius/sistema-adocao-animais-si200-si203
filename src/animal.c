@@ -3,6 +3,8 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <string.h>
+#include <stdlib.h>
+
 int cadastrar_animal(){
     bool resultado_verificacao;
     FILE *banco_de_animais = fopen("../data/animal.txt","a+");
@@ -161,3 +163,92 @@ int atualizaco_de_animal(char *ponteiro_de_atualizacao){
 
     return 1;
 }
+
+
+int consulta_geral_animal() {
+    bool resultado_verificacao;
+    FILE *banco_de_animais = fopen("../data/animal.txt", "r");
+    resultado_verificacao = verificacao_de_arquivo(banco_de_animais);
+    if (resultado_verificacao == 0) {
+        return 0;
+    }
+
+    char linha[300];
+
+    printf("\n====================== LISTA DE ANIMAIS ======================\n");
+    printf("%-5s | %-15s | %-10s | %-10s | %-10s\n",
+           "ID", "Nome", "Especie", "Idade", "Adotado");
+    printf("--------------------------------------------------------------\n");
+
+    while (fgets(linha, sizeof(linha), banco_de_animais)) {
+        linha[strcspn(linha, "\r\n")] = '\0';
+
+        char *partes[10];
+        int i = 0;
+        char *token = strtok(linha, ";");
+
+        while (token != NULL && i < 10) {
+            partes[i++] = token;
+            token = strtok(NULL, ";");
+        }
+        
+        if (i == 5) {
+            printf("%-5s | %-15s | %-10s | %-10s | %-10s\n",
+                   partes[0], partes[1], partes[2], partes[3], partes[4]);
+        }
+    }
+
+    printf("==============================================================\n");
+
+    fclose(banco_de_animais);
+    return 1;
+}
+
+
+int consulta_especifica_animal() {
+    bool resultado_verificacao;
+    FILE *banco_de_animais = fopen("../data/animal.txt", "r");
+    resultado_verificacao = verificacao_de_arquivo(banco_de_animais);
+    if (resultado_verificacao == 0) {
+        return 0;
+    }
+
+    int id;
+    printf("\nDigite o ID do animal que deseja consultar: ");
+    scanf("%d", &id);
+
+    char linha[200];
+    int encontrado = 0;
+
+    while (fgets(linha, sizeof(linha), banco_de_animais)) {
+        char *token = strtok(linha, ";");
+        char campos[5][50];
+        int i = 0;
+
+        while (token != NULL && i < 5) {
+            strcpy(campos[i], token);
+            token = strtok(NULL, ";");
+            i++;
+        }
+
+        // verifica se o ID confere
+        if (atoi(campos[0]) == id) {
+            encontrado = 1;
+            printf("\n================== DADOS DO ANIMAL ================================\n");
+            printf("ID   | Nome                 | Raca | Faixa Etaria | Apto p/ Adocao\n");
+            printf("----------------------------------------------------\n");
+            printf("%-4s | %-20s | %-4s | %-13s | %-15s\n",
+                   campos[0], campos[1], campos[2], campos[3], campos[4]);
+            printf("===================================================================\n");
+            break;
+        }
+    }
+
+    if (!encontrado) {
+        printf("\nNenhum animal encontrado com o ID informado.\n");
+    }
+
+    fclose(banco_de_animais);
+    return 1;
+}
+

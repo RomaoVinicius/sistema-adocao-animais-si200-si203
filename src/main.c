@@ -6,7 +6,7 @@
 #include <string.h>
 
 int main(){
-    int escolha_menu,verificacao_de_erro;
+    int escolha_menu,verificacao_de_erro,tipo_consulta;
     char identificador_de_exclusao[100],cpf_de_exclusao[100],identificador_de_atualizacao[100],cpf_de_atualizacao[100];
     char *ponteiro_de_exclusao;
     char *ponteiro_de_atualizacao;
@@ -98,6 +98,17 @@ int main(){
             }
             break;
             case 7:
+            printf("\nDeseja fazer um 1 - consulta geral ou 2 -especifica ?\n");
+            scanf("%i",&tipo_consulta);
+            limpar_buffer();
+            if(tipo_consulta==1){
+               verificacao_de_erro = consulta_geral_animal(); 
+            }else{
+                verificacao_de_erro = consulta_especifica_animal();
+            }
+            if(verificacao_de_erro != 1){
+                printf("\nNao foi possivel Fazer a consulta");
+            }
             break;
             case 8:
             case 9:
