@@ -113,13 +113,13 @@ int atualizaco_de_adotante(char *ponteiro_de_atualizacao){
 
     switch (atualizacao_de_atributo){
     case 1:
-        printf("\nEntre com o nvo nome do adotante: ");
+        printf("\nEntre com o nvo CPF do adotante: ");
         fgets(valor_atualizado, sizeof(valor_atualizado), stdin);
         valor_atualizado[strcspn(valor_atualizado, "\n")] = '\0';
         verificacao_de_erro = atualizacao_geral(ponteiro_de_atualizacao,atualizacao_de_atributo+4,valor_atualizado);
         break;
     case 2:
-        printf("\nEntre com o novo CPF do adotante: ");
+        printf("\nEntre com o novo Nome do adotante: ");
         fgets(valor_atualizado, sizeof(valor_atualizado), stdin);
         valor_atualizado[strcspn(valor_atualizado, "\n")] = '\0';
         verificacao_de_erro = atualizacao_geral(ponteiro_de_atualizacao,atualizacao_de_atributo+4,valor_atualizado);

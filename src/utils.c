@@ -70,7 +70,7 @@ int atualizacao_geral(char *ponteiro_de_atualizacao, int atributo_atualizado, ch
 
             int indice_real;
             if (eh_animal)
-                indice_real = atributo_atualizado;
+                indice_real = atributo_atualizado+1;
             else
                 indice_real = atributo_atualizado - 4;
 
